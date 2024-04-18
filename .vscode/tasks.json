@@ -9,7 +9,7 @@
                 "-fcolor-diagnostics",
                 "-fansi-escape-codes",
                 "-g",
-                "${workspaceFolder}/graph.cpp",
+                "${workspaceFolder}/Graph.cpp",
                 "${workspaceFolder}/main.cpp",
                 "-o",
                 "${fileDirname}/${fileBasenameNoExtension}"

@@ -63,6 +63,11 @@
         "queue": "cpp",
         "deque": "cpp",
         "stack": "cpp",
-        "execution": "cpp"
+        "execution": "cpp",
+        "version": "cpp",
+        "__memory": "cpp",
+        "memory_resource": "cpp",
+        "iterator": "cpp",
+        "memory": "cpp"
     }
 }
