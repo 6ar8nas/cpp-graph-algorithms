@@ -33,20 +33,10 @@ public:
         } while (cur != child);
     }
 
-    void print() const { printDeep(0, this); }
-
-private:
-    void printDeep(int level, const FibonacciHeapNode<T> *initialNode) const
+    friend std::ostream &operator<<(std::ostream &os, const FibonacciHeapNode<T> &obj)
     {
-        for (int i = 0; i < level; ++i)
-            std::cout << ">";
-        std::cout << key << " (" << degree << ") " << (isMarked ? "marked" : "") << std::endl;
-
-        if (child != nullptr)
-            child->printDeep(level + 1, const_cast<FibonacciHeapNode<T> *>(child));
-
-        if (right != initialNode)
-            right->printDeep(level, initialNode);
+        os << obj.key << " (" << obj.degree << ") " << (obj.isMarked ? "marked" : "");
+        return os;
     }
 };
 
@@ -114,11 +104,11 @@ public:
         return this;
     }
 
-    FibonacciHeapNode<T> *extractMin()
+    T extractMin()
     {
         FibonacciHeapNode<T> *z = minNode;
         if (z == nullptr)
-            return z;
+            throw std::out_of_range("Heap is empty");
 
         FibonacciHeapNode<T> *child = z->child;
         if (child != nullptr)
@@ -136,28 +126,20 @@ public:
         }
 
         removeFromRootList(z);
-        if (z == z->right)
-            minNode = nullptr;
-        else
-        {
-            minNode = z->right;
+
+        if (minNode != nullptr)
             consolidate();
-        }
         --numNodes;
 
-        z->left = nullptr;
-        z->right = nullptr;
-        z->degree = 0;
-        return z;
+        T key = z->key;
+        delete z;
+        return key;
     }
 
     void decreaseKey(FibonacciHeapNode<T> *node, const T &key)
     {
         if (key > node->key)
-        {
-            std::cerr << "New key is greater than current key" << std::endl;
-            return;
-        }
+            throw std::invalid_argument("New key is greater than current key");
 
         node->key = key;
         FibonacciHeapNode<T> *parent = node->parent;
@@ -176,12 +158,15 @@ public:
         extractMin();
     }
 
-    void printHeap()
+    bool isEmpty() const { return numNodes == 0; }
+
+    friend std::ostream &operator<<(std::ostream &os, const FibonacciHeap<T> &obj)
     {
-        if (minNode != nullptr)
-            minNode->print();
+        if (!obj.isEmpty())
+            obj.printDeep(os, 0, obj.minNode, obj.minNode);
         else
-            std::cout << "<BLANK>" << std::endl;
+            os << "<BLANK>" << std::endl;
+        return os;
     }
 
 private:
@@ -295,13 +280,31 @@ private:
 
     void removeFromRootList(FibonacciHeapNode<T> *node)
     {
-        if (node == node->right)
-            minNode = nullptr;
-        else if (node == minNode)
+        if (node == minNode)
+        {
             minNode = minNode->right;
+            if (node == minNode)
+                minNode = nullptr;
+        }
 
         node->left->right = node->right;
         node->right->left = node->left;
+    }
+
+    void printDeep(std::ostream &os, int depth, const FibonacciHeapNode<T> *node, const FibonacciHeapNode<T> *initialNode) const
+    {
+        for (int i = 0; i < depth; ++i)
+            os << ">";
+        if (depth > 0)
+            os << " ";
+
+        os << *node << std::endl;
+
+        if (node->child != nullptr)
+            printDeep(os, depth + 1, node->child, node->child);
+
+        if (node->right != initialNode)
+            printDeep(os, depth, node->right, initialNode);
     }
 };
 
