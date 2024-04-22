@@ -126,13 +126,12 @@ public:
         }
 
         removeFromRootList(z);
+        T key = z->key;
+        delete z;
 
         if (minNode != nullptr)
             consolidate();
         --numNodes;
-
-        T key = z->key;
-        delete z;
         return key;
     }
 
@@ -178,6 +177,7 @@ private:
         do
         {
             int d = x->degree;
+            FibonacciHeapNode<T> *next = x->right;
             while (A[d] != nullptr)
             {
                 FibonacciHeapNode<T> *y = A[d];
@@ -188,7 +188,7 @@ private:
                 ++d;
             }
             A[d] = x;
-            x = x->right;
+            x = next;
         } while (x != minNode);
 
         minNode = nullptr;
@@ -272,10 +272,10 @@ private:
 
     void attachToRootList(FibonacciHeapNode<T> *node)
     {
-        minNode->left->right = node;
-        node->right = minNode;
         node->left = minNode->left;
+        minNode->left->right = node;
         minNode->left = node;
+        node->right = minNode;
     }
 
     void removeFromRootList(FibonacciHeapNode<T> *node)
