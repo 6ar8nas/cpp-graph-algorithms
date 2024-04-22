@@ -68,6 +68,7 @@
         "__memory": "cpp",
         "memory_resource": "cpp",
         "iterator": "cpp",
-        "memory": "cpp"
+        "memory": "cpp",
+        "set": "cpp"
     }
 }

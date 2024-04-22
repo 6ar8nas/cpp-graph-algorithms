@@ -5,94 +5,109 @@
 
 int main()
 {
+    // Dijkstra testing
+    {
+        Graph gen(1000, 0, 3, 0, 3);
+        std::cout << "Graph gen: " << std::endl;
+        std::cout << gen << std::endl;
+
+        auto minHeapResults = gen.dijkstraMinHeap(0);
+        Graph::printDijkstraResults(0, minHeapResults.first, minHeapResults.second);
+        std::cout << minHeapResults.second << std::endl;
+
+        auto fibHeapResults = gen.dijkstraFibHeap(0);
+        Graph::printDijkstraResults(0, fibHeapResults.first, fibHeapResults.second);
+        std::cout << std::endl;
+    }
+
     // // Dijkstra testing on generated graph
     // {
-    //     auto start_time1 = std::chrono::high_resolution_clock::now();
+    //     auto start_time = std::chrono::high_resolution_clock::now();
     //     Graph gen10m(10000000, 0, 3, 0, 3);
     //     std::cout << "Graph gen10m with 10000000 vertices and random 0-3 edges" << std::endl;
     //     // std::cout << gen10m << std::endl;
-    //     std::chrono::duration<double> duration1 = std::chrono::high_resolution_clock::now() - start_time1;
-    //     std::cout << duration1.count() << std::endl;
+    //     std::chrono::duration<double> duration = std::chrono::high_resolution_clock::now() - start_time;
+    //     std::cout << duration.count() << std::endl;
     // }
     // {
-    //     auto start_time2 = std::chrono::high_resolution_clock::now();
+    //     auto start_time = std::chrono::high_resolution_clock::now();
     //     Graph gen1m(1000000, 0, 10, 0, 10);
     //     std::cout << "Graph gen1m with 1000000 vertices and random 0-10 edges" << std::endl;
     //     // std::cout << gen1m << std::endl;
-    //     std::chrono::duration<double> duration2 = std::chrono::high_resolution_clock::now() - start_time2;
-    //     std::cout << duration2.count() << std::endl;
+    //     std::chrono::duration<double> duration = std::chrono::high_resolution_clock::now() - start_time;
+    //     std::cout << duration.count() << std::endl;
     // }
     // {
-    //     auto start_time3 = std::chrono::high_resolution_clock::now();
+    //     auto start_time = std::chrono::high_resolution_clock::now();
     //     Graph gen100k(100000, 0, 100, 0, 100);
     //     std::cout << "Graph gen100k with 100000 vertices and random 0-100 edges" << std::endl;
     //     // std::cout << gen100k << std::endl;
-    //     std::chrono::duration<double> duration3 = std::chrono::high_resolution_clock::now() - start_time3;
-    //     std::cout << duration3.count() << std::endl;
+    //     std::chrono::duration<double> duration = std::chrono::high_resolution_clock::now() - start_time;
+    //     std::cout << duration.count() << std::endl;
     // }
     // {
-    //     auto start_time4 = std::chrono::high_resolution_clock::now();
+    //     auto start_time = std::chrono::high_resolution_clock::now();
     //     Graph gen10k(10000, 0, 1000, 0, 1000);
     //     std::cout << "Graph gen10k with 10000 vertices and random 0-1000 edges" << std::endl;
     //     // std::cout << gen10k << std::endl;
-    //     std::chrono::duration<double> duration4 = std::chrono::high_resolution_clock::now() - start_time4;
-    //     std::cout << duration4.count() << std::endl;
+    //     std::chrono::duration<double> duration = std::chrono::high_resolution_clock::now() - start_time;
+    //     std::cout << duration.count() << std::endl;
     // }
     // {
-    //     auto start_time5 = std::chrono::high_resolution_clock::now();
+    //     auto start_time = std::chrono::high_resolution_clock::now();
     //     Graph gen5k(5000, 1000, 4999, 1000, 4999);
     //     std::cout << "Graph gen5k with 5000 vertices and random 1000-4999 edges" << std::endl;
     //     // std::cout << gen5k << std::endl;
-    //     std::chrono::duration<double> duration5 = std::chrono::high_resolution_clock::now() - start_time5;
-    //     std::cout << duration5.count() << std::endl;
+    //     std::chrono::duration<double> duration = std::chrono::high_resolution_clock::now() - start_time;
+    //     std::cout << duration.count() << std::endl;
     // }
     // {
-    //     auto start_time6 = std::chrono::high_resolution_clock::now();
+    //     auto start_time = std::chrono::high_resolution_clock::now();
     //     Graph gen1k1(1000, 0, 5, 0, 5);
     //     std::cout << "Graph gen1k1 with 1000 vertices and random 0-5 edges" << std::endl;
     //     // std::cout << gen1k1 << std::endl;
-    //     std::chrono::duration<double> duration6 = std::chrono::high_resolution_clock::now() - start_time6;
-    //     std::cout << duration6.count() << std::endl;
+    //     std::chrono::duration<double> duration = std::chrono::high_resolution_clock::now() - start_time;
+    //     std::cout << duration.count() << std::endl;
     // }
     // {
-    //     auto start_time7 = std::chrono::high_resolution_clock::now();
-    //     Graph gen1k2(1000, 0, 25, 0, 25);
-    //     std::cout << "Graph gen1k2 with 1000 vertices and random 0-25 edges" << std::endl;
+    //     auto start_time = std::chrono::high_resolution_clock::now();
+    //     Graph gen1k2(1000, 5, 25, 5, 25);
+    //     std::cout << "Graph gen1k2 with 1000 vertices and random 5-25 edges" << std::endl;
     //     // std::cout << gen1k2 << std::endl;
-    //     std::chrono::duration<double> duration7 = std::chrono::high_resolution_clock::now() - start_time7;
-    //     std::cout << duration7.count() << std::endl;
+    //     std::chrono::duration<double> duration = std::chrono::high_resolution_clock::now() - start_time;
+    //     std::cout << duration.count() << std::endl;
     // }
     // {
-    //     auto start_time8 = std::chrono::high_resolution_clock::now();
-    //     Graph gen1k3(1000, 0, 50, 0, 50);
-    //     std::cout << "Graph gen1k3 with 1000 vertices and random 0-50 edges" << std::endl;
+    //     auto start_time = std::chrono::high_resolution_clock::now();
+    //     Graph gen1k3(1000, 25, 50, 25, 50);
+    //     std::cout << "Graph gen1k3 with 1000 vertices and random 25-50 edges" << std::endl;
     //     // std::cout << gen1k3 << std::endl;
-    //     std::chrono::duration<double> duration8 = std::chrono::high_resolution_clock::now() - start_time8;
-    //     std::cout << duration8.count() << std::endl;
+    //     std::chrono::duration<double> duration = std::chrono::high_resolution_clock::now() - start_time;
+    //     std::cout << duration.count() << std::endl;
     // }
     // {
-    //     auto start_time9 = std::chrono::high_resolution_clock::now();
-    //     Graph gen1k4(1000, 0, 100, 0, 100);
-    //     std::cout << "Graph gen1k4 with 1000 vertices and random 0-100 edges" << std::endl;
+    //     auto start_time = std::chrono::high_resolution_clock::now();
+    //     Graph gen1k4(1000, 50, 100, 50, 100);
+    //     std::cout << "Graph gen1k4 with 1000 vertices and random 50-100 edges" << std::endl;
     //     // std::cout << gen1k4 << std::endl;
-    //     std::chrono::duration<double> duration9 = std::chrono::high_resolution_clock::now() - start_time9;
-    //     std::cout << duration9.count() << std::endl;
+    //     std::chrono::duration<double> duration = std::chrono::high_resolution_clock::now() - start_time;
+    //     std::cout << duration.count() << std::endl;
     // }
     // {
-    //     auto start_time10 = std::chrono::high_resolution_clock::now();
-    //     Graph gen1k5(1000, 0, 200, 0, 200);
-    //     std::cout << "Graph gen1k5 with 1000 vertices and random 0-200 edges" << std::endl;
+    //     auto start_time = std::chrono::high_resolution_clock::now();
+    //     Graph gen1k5(1000, 100, 250, 100, 250);
+    //     std::cout << "Graph gen1k5 with 1000 vertices and random 100-250 edges" << std::endl;
     //     // std::cout << gen1k5 << std::endl;
-    //     std::chrono::duration<double> duration10 = std::chrono::high_resolution_clock::now() - start_time10;
-    //     std::cout << duration10.count() << std::endl;
+    //     std::chrono::duration<double> duration = std::chrono::high_resolution_clock::now() - start_time;
+    //     std::cout << duration.count() << std::endl;
     // }
     // {
-    //     auto start_time11 = std::chrono::high_resolution_clock::now();
-    //     Graph gen1k6(1000, 0, 500, 0, 500);
-    //     std::cout << "Graph gen1k6 with 1000 vertices and random 0-500 edges" << std::endl;
+    //     auto start_time = std::chrono::high_resolution_clock::now();
+    //     Graph gen1k6(1000, 250, 500, 250, 500);
+    //     std::cout << "Graph gen1k6 with 1000 vertices and random 250-500 edges" << std::endl;
     //     // std::cout << gen1k6 << std::endl;
-    //     std::chrono::duration<double> duration11 = std::chrono::high_resolution_clock::now() - start_time11;
-    //     std::cout << duration11.count() << std::endl;
+    //     std::chrono::duration<double> duration = std::chrono::high_resolution_clock::now() - start_time;
+    //     std::cout << duration.count() << std::endl;
     // }
 
     // // Fibonacci heap testing

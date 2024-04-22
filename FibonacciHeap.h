@@ -173,8 +173,15 @@ private:
     {
         int maxDegree = static_cast<int>(log(numNodes) / log((1 + sqrt(5)) / 2)) + 1;
         std::vector<FibonacciHeapNode<T> *> A(maxDegree, nullptr);
-        FibonacciHeapNode<T> *x = minNode;
+        std::vector<FibonacciHeapNode<T> *> rootList;
+        FibonacciHeapNode<T> *curr = minNode;
         do
+        {
+            rootList.push_back(curr);
+            curr = curr->right;
+        } while (curr != minNode);
+
+        for (auto &x : rootList)
         {
             int d = x->degree;
             FibonacciHeapNode<T> *next = x->right;
@@ -188,8 +195,7 @@ private:
                 ++d;
             }
             A[d] = x;
-            x = next;
-        } while (x != minNode);
+        }
 
         minNode = nullptr;
 
