@@ -69,6 +69,9 @@
         "memory_resource": "cpp",
         "iterator": "cpp",
         "memory": "cpp",
-        "set": "cpp"
+        "set": "cpp",
+        "fstream": "cpp",
+        "iomanip": "cpp",
+        "chrono": "cpp"
     }
 }

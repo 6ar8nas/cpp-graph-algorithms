@@ -14,6 +14,12 @@ struct Edge
 
     Edge(int source, int destination, int weight = 0) : src(source), dest(destination), weight(weight) {}
 
+    bool operator==(const Edge &other) const
+    {
+        return weight == other.weight && ((src == other.src && dest == other.dest) ||
+                                          (src == other.dest && dest == other.src));
+    }
+
     struct AdjListHash
     {
         std::size_t operator()(const Edge &e) const
@@ -22,14 +28,31 @@ struct Edge
         }
     };
 
-    struct DirectedEqual
+    struct UndirectedEqual
     {
         bool operator()(const Edge &e1, const Edge &e2) const
         {
-            return (e1.src == e2.src && e1.dest == e2.dest);
+            return (e1.src == e2.src && e1.dest == e2.dest) || (e1.src == e2.dest && e1.dest == e2.src);
         }
     };
 };
+
+struct City
+{
+    int index;
+    int x, y;
+
+    double distance(const City &other) const
+    {
+        int dx = x - other.x;
+        int dy = y - other.y;
+        return sqrt(dx * dx + dy * dy);
+    }
+
+    City(int index, int x, int y) : index(index), x(x), y(y) {}
+};
+
+std::unordered_map<int, City> generateRandomGraphCities(int n);
 
 class VertexInfo
 {
@@ -53,11 +76,11 @@ public:
 
     friend std::ostream &operator<<(std::ostream &os, const VertexInfo &obj)
     {
-        os << obj.vertex << " (d = " << obj.distance << ", p = " << obj.parent << ")";
+        os << obj.vertex << " (p = " << obj.parent << ", d = " << obj.distance << ")";
         return os;
     }
 
-    struct DijkstraHash
+    struct VertexHash
     {
         std::size_t operator()(const VertexInfo &vi) const
         {
@@ -65,7 +88,7 @@ public:
         }
     };
 
-    struct DijkstraEqual
+    struct VertexEqual
     {
         bool operator()(const VertexInfo &lhs, const VertexInfo &rhs) const
         {
@@ -78,21 +101,25 @@ class Graph
 {
 private:
     int V;
-    std::unordered_set<Edge, Edge::AdjListHash, Edge::DirectedEqual> *adj;
+    std::unordered_set<Edge, Edge::AdjListHash, Edge::UndirectedEqual> *adj;
 
 public:
     Graph(int V);
-    Graph(int V, int KMinIn, int KMaxIn, int KMinOut, int KMaxOut);
     Graph(int V, const std::vector<Edge> &edges);
+    Graph(const std::unordered_map<int, City> &cities);
     ~Graph();
     bool addEdge(const Edge &edge);
     bool removeEdge(const Edge &edge);
     bool hasEdge(const Edge &edge) const;
     int verticesCount() const { return V; }
 
-    std::pair<std::unordered_map<int, VertexInfo>, double> dijkstraMinHeap(int sourceKey) const;
-    std::pair<std::unordered_map<int, VertexInfo>, double> dijkstraFibHeap(int sourceKey) const;
-    static void printDijkstraResults(int source, const std::unordered_map<int, VertexInfo> &distances, double duration);
+    std::pair<std::pair<std::vector<int>, int>, double> nearestNeighborTSP(int start) const;
+
+    std::vector<VertexInfo> primMST(int start) const;
+    std::vector<int> preorderWalk(const std::vector<VertexInfo> &mst) const;
+    std::pair<std::pair<std::vector<int>, int>, double> doubleTreeTSP(int start) const;
+
+    std::pair<std::pair<std::vector<int>, int>, double> randomInsertionTSP(int start1, int start2) const;
 
     friend std::ostream &operator<<(std::ostream &os, const Graph &obj)
     {
