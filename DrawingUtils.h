@@ -23,10 +23,10 @@ void drawPathTSP(const std::unordered_map<int, City> &cities, const std::vector<
     // Draw cities and paths
     cairo_set_line_width(cr, 2);
 
-    for (size_t i = 0; i < tspPath.size(); ++i)
+    for (size_t i = 0; i < tspPath.size() - 1; ++i)
     {
         int currentIndex = tspPath[i];
-        int nextIndex = tspPath[(i + 1) % tspPath.size()]; // loop back to the start
+        int nextIndex = tspPath[i + 1];
 
         const City &currentCity = cities.at(currentIndex);
         const City &nextCity = cities.at(nextIndex);
@@ -41,8 +41,16 @@ void drawPathTSP(const std::unordered_map<int, City> &cities, const std::vector<
     for (const auto &pair : cities)
     {
         const City &city = pair.second;
-        cairo_set_source_rgb(cr, 1, 0, 0);
-        cairo_arc(cr, city.x + margin, city.y + margin, 5, 0, 2 * M_PI);
+        if (pair.first == 0)
+        {
+            cairo_set_source_rgb(cr, 0, 0, 1);
+            cairo_arc(cr, city.x + margin, city.y + margin, 10, 0, 2 * M_PI);
+        }
+        else
+        {
+            cairo_set_source_rgb(cr, 1, 0, 0);
+            cairo_arc(cr, city.x + margin, city.y + margin, 5, 0, 2 * M_PI);
+        }
         cairo_fill(cr);
     }
 

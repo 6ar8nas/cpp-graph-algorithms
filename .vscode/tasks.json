@@ -12,7 +12,10 @@
                 "${workspaceFolder}/Graph.cpp",
                 "${workspaceFolder}/main.cpp",
                 "-o",
-                "${fileDirname}/${fileBasenameNoExtension}"
+                "${fileDirname}/${fileBasenameNoExtension}",
+                "-I/opt/homebrew/Cellar/cairo/1.18.0/include/cairo",
+                "-L/opt/homebrew/Cellar/cairo/1.18.0/lib",
+                "-lcairo"
             ],
             "options": {
                 "cwd": "${fileDirname}"
