@@ -120,4 +120,4 @@ private:
     }
 };
 
-#endif
+#endif // MIN_HEAP_H

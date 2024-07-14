@@ -20,6 +20,7 @@ struct Edge
                                           (src == other.dest && dest == other.src));
     }
 
+    // In adjacency list, the source is always the same, so hashing only the destination is better performance-wise.
     struct AdjListHash
     {
         std::size_t operator()(const Edge &e) const
@@ -28,7 +29,7 @@ struct Edge
         }
     };
 
-    struct UndirectedEqual
+    struct AdjListEquals
     {
         bool operator()(const Edge &e1, const Edge &e2) const
         {
@@ -42,6 +43,8 @@ struct City
     int index;
     int x, y;
 
+    City(int index, int x, int y) : index(index), x(x), y(y) {}
+
     double distance(const City &other) const
     {
         int dx = x - other.x;
@@ -49,10 +52,8 @@ struct City
         return sqrt(dx * dx + dy * dy);
     }
 
-    City(int index, int x, int y) : index(index), x(x), y(y) {}
+    static std::unordered_map<int, City> generateRandomGraphCities(int n);
 };
-
-std::unordered_map<int, City> generateRandomGraphCities(int n);
 
 class VertexInfo
 {
@@ -88,7 +89,7 @@ public:
         }
     };
 
-    struct VertexEqual
+    struct VertexEquals
     {
         bool operator()(const VertexInfo &lhs, const VertexInfo &rhs) const
         {
@@ -101,7 +102,7 @@ class Graph
 {
 private:
     int V;
-    std::unordered_set<Edge, Edge::AdjListHash, Edge::UndirectedEqual> *adj;
+    std::unordered_set<Edge, Edge::AdjListHash, Edge::AdjListEquals> *adj;
 
 public:
     Graph(int V);
@@ -113,12 +114,11 @@ public:
     bool hasEdge(const Edge &edge) const;
     int verticesCount() const { return V; }
 
-    std::pair<std::pair<std::vector<int>, int>, double> nearestNeighborTSP(int start) const;
-
     std::vector<VertexInfo> primMST(int start) const;
     std::vector<int> preorderWalk(const std::vector<VertexInfo> &mst) const;
-    std::pair<std::pair<std::vector<int>, int>, double> doubleTreeTSP(int start) const;
 
+    std::pair<std::pair<std::vector<int>, int>, double> nearestNeighborTSP(int start) const;
+    std::pair<std::pair<std::vector<int>, int>, double> doubleTreeTSP(int start) const;
     std::pair<std::pair<std::vector<int>, int>, double> randomInsertionTSP(int start1, int start2) const;
 
     friend std::ostream &operator<<(std::ostream &os, const Graph &obj)
@@ -134,4 +134,4 @@ public:
     }
 };
 
-#endif
+#endif // GRAPH_H

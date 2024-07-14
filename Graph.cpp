@@ -15,7 +15,7 @@ Graph::Graph(int V) : V(V)
     if (V < 0)
         throw std::invalid_argument("The number of vertices must be non-negative.");
 
-    adj = new std::unordered_set<Edge, Edge::AdjListHash, Edge::UndirectedEqual>[V];
+    adj = new std::unordered_set<Edge, Edge::AdjListHash, Edge::AdjListEquals>[V];
 
     std::uniform_int_distribution<int> weight(1, 50);
 
@@ -31,7 +31,7 @@ Graph::Graph(int V) : V(V)
 
 Graph::Graph(const std::unordered_map<int, City> &cities) : V(cities.size())
 {
-    adj = new std::unordered_set<Edge, Edge::AdjListHash, Edge::UndirectedEqual>[V];
+    adj = new std::unordered_set<Edge, Edge::AdjListHash, Edge::AdjListEquals>[V];
 
     for (int i = 0; i < V - 1; ++i)
     {
@@ -49,7 +49,7 @@ Graph::Graph(int V, const std::vector<Edge> &edges) : V(V)
     if (V < 0)
         throw std::invalid_argument("The number of vertices must be non-negative.");
 
-    adj = new std::unordered_set<Edge, Edge::AdjListHash, Edge::UndirectedEqual>[V];
+    adj = new std::unordered_set<Edge, Edge::AdjListHash, Edge::AdjListEquals>[V];
 
     for (const auto &edge : edges)
         addEdge(edge);
@@ -91,42 +91,6 @@ bool Graph::hasEdge(const Edge &edge) const
     return adj[edge.src].count(edge) != 0;
 }
 
-std::pair<std::pair<std::vector<int>, int>, double> Graph::nearestNeighborTSP(int start) const
-{
-    auto start_time = std::chrono::high_resolution_clock::now();
-
-    std::vector<int> tour;
-    int totalWeight = 0;
-    std::vector<bool> visited(V, false);
-    int current = start;
-    tour.push_back(current);
-    visited[current] = true;
-
-    for (int i = 1; i < V; ++i)
-    {
-        int minWeight = std::numeric_limits<int>::max();
-        int nextEdge;
-        for (const auto &edge : adj[current])
-        {
-            if (!visited[edge.dest] && edge.weight < minWeight)
-            {
-                minWeight = edge.weight;
-                nextEdge = edge.dest;
-            }
-        }
-        tour.push_back(nextEdge);
-        totalWeight += minWeight;
-        visited[nextEdge] = true;
-        current = nextEdge;
-    }
-
-    tour.push_back(start);
-    totalWeight += adj[current].find({current, start})->weight;
-
-    std::chrono::duration<double> duration = std::chrono::high_resolution_clock::now() - start_time;
-    return std::make_pair(std::make_pair(tour, totalWeight), duration.count());
-}
-
 std::vector<VertexInfo> Graph::primMST(int start) const
 {
     std::vector<VertexInfo> mst;
@@ -136,7 +100,7 @@ std::vector<VertexInfo> Graph::primMST(int start) const
     for (int i = 0; i < V; ++i)
         vertices.emplace_back(VertexInfo(i, (i == start ? 0 : maxValue), -1));
 
-    MinHeap<VertexInfo, VertexInfo::VertexHash, VertexInfo::VertexEqual> minHeap(vertices);
+    MinHeap<VertexInfo, VertexInfo::VertexHash, VertexInfo::VertexEquals> minHeap(vertices);
     while (!minHeap.isEmpty())
     {
         VertexInfo u = minHeap.extractMin();
@@ -199,6 +163,42 @@ std::vector<int> Graph::preorderWalk(const std::vector<VertexInfo> &mst) const
     }
 
     return preorder;
+}
+
+std::pair<std::pair<std::vector<int>, int>, double> Graph::nearestNeighborTSP(int start) const
+{
+    auto start_time = std::chrono::high_resolution_clock::now();
+
+    std::vector<int> tour;
+    int totalWeight = 0;
+    std::vector<bool> visited(V, false);
+    int current = start;
+    tour.push_back(current);
+    visited[current] = true;
+
+    for (int i = 1; i < V; ++i)
+    {
+        int minWeight = std::numeric_limits<int>::max();
+        int nextEdge;
+        for (const auto &edge : adj[current])
+        {
+            if (!visited[edge.dest] && edge.weight < minWeight)
+            {
+                minWeight = edge.weight;
+                nextEdge = edge.dest;
+            }
+        }
+        tour.push_back(nextEdge);
+        totalWeight += minWeight;
+        visited[nextEdge] = true;
+        current = nextEdge;
+    }
+
+    tour.push_back(start);
+    totalWeight += adj[current].find({current, start})->weight;
+
+    std::chrono::duration<double> duration = std::chrono::high_resolution_clock::now() - start_time;
+    return std::make_pair(std::make_pair(tour, totalWeight), duration.count());
 }
 
 std::pair<std::pair<std::vector<int>, int>, double> Graph::doubleTreeTSP(int start) const
@@ -278,7 +278,7 @@ std::pair<std::pair<std::vector<int>, int>, double> Graph::randomInsertionTSP(in
     return std::make_pair(std::make_pair(tour, totalWeight), duration.count());
 }
 
-std::unordered_map<int, City> generateRandomGraphCities(int n)
+std::unordered_map<int, City> City::generateRandomGraphCities(int n)
 {
     std::unordered_map<int, City> cities;
     std::uniform_int_distribution<int> coordinate(0, 2000);

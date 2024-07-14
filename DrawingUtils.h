@@ -16,11 +16,8 @@ void drawPathTSP(const std::unordered_map<int, City> &cities, const std::vector<
     cairo_surface_t *surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, width, height);
     cairo_t *cr = cairo_create(surface);
 
-    // White background
     cairo_set_source_rgb(cr, 1, 1, 1);
     cairo_paint(cr);
-
-    // Draw cities and paths
     cairo_set_line_width(cr, 2);
 
     for (size_t i = 0; i < tspPath.size() - 1; ++i)
@@ -37,12 +34,12 @@ void drawPathTSP(const std::unordered_map<int, City> &cities, const std::vector<
         cairo_stroke(cr);
     }
 
-    // Draw city points
     for (const auto &pair : cities)
     {
         const City &city = pair.second;
         if (pair.first == 0)
         {
+            // Highlight the starting city in blue
             cairo_set_source_rgb(cr, 0, 0, 1);
             cairo_arc(cr, city.x + margin, city.y + margin, 10, 0, 2 * M_PI);
         }
@@ -54,19 +51,15 @@ void drawPathTSP(const std::unordered_map<int, City> &cities, const std::vector<
         cairo_fill(cr);
     }
 
-    // Draw the title
     cairo_set_source_rgb(cr, 0, 0, 0);
     cairo_select_font_face(cr, "Sans", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_BOLD);
     cairo_set_font_size(cr, 24);
     cairo_move_to(cr, width / 2 - margin, margin / 2);
     cairo_show_text(cr, title.c_str());
-
-    // Save to PNG file
     cairo_surface_write_to_png(surface, title.append(".png").c_str());
 
-    // Clean up
     cairo_destroy(cr);
     cairo_surface_destroy(surface);
 }
 
-#endif
+#endif // DRAWING_UTILS_H
