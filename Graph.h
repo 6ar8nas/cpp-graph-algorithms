@@ -6,6 +6,8 @@
 #include <utility>
 #include <iostream>
 
+// Edge represents a connection between two vertices in a graph.
+// Implemented for undirected graphs.
 struct Edge
 {
     int src;
@@ -38,6 +40,7 @@ struct Edge
     };
 };
 
+// City represents a point in a 2D plane. City mesh can be mapped to a graph.
 struct City
 {
     int index;
@@ -55,6 +58,8 @@ struct City
     static std::unordered_map<int, City> generateRandomGraphCities(int n);
 };
 
+// VertexInfo represents a vertex in a graph with additional information for algorithms and traversals.
+// Separate VertexInfo objects can be uniquely identified by its vertex property.
 class VertexInfo
 {
 public:
@@ -98,6 +103,8 @@ public:
     };
 };
 
+// Graph represents a collection of vertices and edges.
+// Implemented for undirected graphs.
 class Graph
 {
 private:
@@ -105,14 +112,22 @@ private:
     std::unordered_set<Edge, Edge::AdjListHash, Edge::AdjListEquals> *adj;
 
 public:
+    // Random weighted complete graph generator.
     Graph(int V);
+    // Random weighted graph generator with edge count for each vertex in range [KMin, KMax].
+    Graph(int V, int KMin, int KMax);
     Graph(int V, const std::vector<Edge> &edges);
     Graph(const std::unordered_map<int, City> &cities);
-    ~Graph();
+    ~Graph() { delete[] adj; }
+
     bool addEdge(const Edge &edge);
     bool removeEdge(const Edge &edge);
     bool hasEdge(const Edge &edge) const;
     int verticesCount() const { return V; }
+
+    std::pair<std::unordered_map<int, VertexInfo>, double> dijkstraMinHeap(int sourceKey) const;
+    std::pair<std::unordered_map<int, VertexInfo>, double> dijkstraFibHeap(int sourceKey) const;
+    static void printDijkstraResults(int source, const std::unordered_map<int, VertexInfo> &distances);
 
     std::vector<VertexInfo> primMST(int start) const;
     std::vector<int> preorderWalk(const std::vector<VertexInfo> &mst) const;

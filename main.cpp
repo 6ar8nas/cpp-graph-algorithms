@@ -68,3 +68,33 @@ int benchmarkTSP()
 
     return 0;
 }
+
+int benchmarkDijkstra()
+{
+    int nodeCount = 1000;
+    int kMin = 0;
+    int kMax = 50;
+    int attempts = 1000;
+
+    double totalDurationGen = 0;
+    double totalMinHeapDuration = 0;
+    double totalFibHeapDuration = 0;
+    for (int i = 0; i < attempts; ++i)
+    {
+        auto start_time = std::chrono::high_resolution_clock::now();
+        Graph gen(nodeCount, kMin, kMax);
+        std::chrono::duration<double> durationGen = std::chrono::high_resolution_clock::now() - start_time;
+        totalDurationGen += durationGen.count();
+        auto minHeap = gen.dijkstraMinHeap(0);
+        totalMinHeapDuration += minHeap.second;
+        auto fibHeap = gen.dijkstraFibHeap(0);
+        totalFibHeapDuration += fibHeap.second;
+    }
+
+    std::cout << "Node count: " << nodeCount << ", gen. boundaries: [" << kMin << ", " << kMax << "], attempts: " << attempts << std::endl;
+    std::cout << "Average graph gen. duration: " << totalDurationGen / attempts << std::endl;
+    std::cout << "Average minimum heap Dijkstra duration = " << totalMinHeapDuration / attempts << std::endl;
+    std::cout << "Average fibonacci heap Dijkstra duration = " << totalFibHeapDuration / attempts << std::endl;
+
+    return 0;
+}
