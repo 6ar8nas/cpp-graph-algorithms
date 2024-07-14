@@ -7,40 +7,26 @@ int main()
 {
     auto start_time = std::chrono::high_resolution_clock::now();
     auto citiesCount = 1000;
-    std::unordered_map<int, City> cities = generateRandomGraphCities(citiesCount);
+    std::unordered_map<int, City> cities = City::generateRandomGraphCities(citiesCount);
     Graph graph(cities);
     std::chrono::duration<double> durationGen = std::chrono::high_resolution_clock::now() - start_time;
-    // std::cout << "Full graph of " << citiesCount << " cities created in " << durationGen.count() << " seconds" << std::endl;
-    // std::cout << graph << std::endl;
 
     auto doubleTree = graph.doubleTreeTSP(0);
-    // std::cout << "Double tree TSP path:" << std::endl;
-    // for (auto vertex : doubleTree.first.first)
-    //     std::cout << vertex << " -> ";
-    // std::cout << "END" << std::endl;
     std::cout << "Double tree TSP weight = " << doubleTree.first.second << " duration = " << doubleTree.second << " seconds" << std::endl;
     drawPathTSP(cities, doubleTree.first.first, "Double tree");
 
     auto nearestNeighbors = graph.nearestNeighborTSP(0);
-    // std::cout << "Nearest neighbor TSP path:" << std::endl;
-    // for (auto vertex : nearestNeighbors.first.first)
-    //     std::cout << vertex << " -> ";
-    // std::cout << "END" << std::endl;
     std::cout << "Nearest neighbor TSP weight = " << nearestNeighbors.first.second << " duration = " << nearestNeighbors.second << " seconds" << std::endl;
     drawPathTSP(cities, nearestNeighbors.first.first, "Nearest neighbor");
 
     auto randomInsertion = graph.randomInsertionTSP(0, 1);
-    // std::cout << "Random insertion TSP path:" << std::endl;
-    // for (auto vertex : randomInsertion.first.first)
-    //     std::cout << vertex << " -> ";
-    // std::cout << "END" << std::endl;
     std::cout << "Random insertion TSP weight = " << randomInsertion.first.second << " duration = " << randomInsertion.second << " seconds" << std::endl;
     drawPathTSP(cities, randomInsertion.first.first, "Random insertion");
 
     return 0;
 }
 
-int benchmark()
+int benchmarkTSP()
 {
     int citiesCount = 25000;
     int attempts = 1;
@@ -56,7 +42,7 @@ int benchmark()
     for (int i = 0; i < attempts; ++i)
     {
         auto start_time = std::chrono::high_resolution_clock::now();
-        std::unordered_map<int, City> cities = generateRandomGraphCities(citiesCount);
+        std::unordered_map<int, City> cities = City::generateRandomGraphCities(citiesCount);
         Graph graph(cities);
         std::chrono::duration<double> durationGen = std::chrono::high_resolution_clock::now() - start_time;
         totalDurationGen += durationGen.count();
@@ -75,10 +61,10 @@ int benchmark()
     }
 
     std::cout << "Cities count: " << citiesCount << ", attempts: " << attempts << std::endl;
-    std::cout << "Avg graph creation duration: " << totalDurationGen / attempts << std::endl;
-    std::cout << "Avg double tree duration = " << totalDoubleTreeDuration / attempts << ", weights = " << totalDoubleTreeWeights / attempts << std::endl;
-    std::cout << "Avg nearest neighbor duration = " << totalNearestNeighborDuration / attempts << ", weights = " << totalNearestNeighborWeights / attempts << std::endl;
-    std::cout << "Avg random insertion duration = " << totalRandomInsertionDuration / attempts << ", weights = " << totalRandomInsertionWeights / attempts << std::endl;
+    std::cout << "Average graph gen. duration: " << totalDurationGen / attempts << std::endl;
+    std::cout << "Average double tree algorithm duration = " << totalDoubleTreeDuration / attempts << ", weights = " << totalDoubleTreeWeights / attempts << std::endl;
+    std::cout << "Average nearest neighbor algorithm duration = " << totalNearestNeighborDuration / attempts << ", weights = " << totalNearestNeighborWeights / attempts << std::endl;
+    std::cout << "Average random insertion algorithm duration = " << totalRandomInsertionDuration / attempts << ", weights = " << totalRandomInsertionWeights / attempts << std::endl;
 
     return 0;
 }
